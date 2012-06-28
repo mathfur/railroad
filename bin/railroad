@@ -19,6 +19,8 @@ APP_HUMAN_NAME = "RailRoad"
 APP_VERSION    = [0,5,0]
 COPYRIGHT      = "Copyright (C) 2007-2008 Javier Smaldone"
 
+$: << Dir.pwd
+
 require File.join( File.dirname(__FILE__), '../lib/', 'railroad/options_struct' )
 require File.join( File.dirname(__FILE__), '../lib/', 'railroad/diagram_graph' )
 require File.join( File.dirname(__FILE__), '../lib/', 'railroad/app_diagram' )
