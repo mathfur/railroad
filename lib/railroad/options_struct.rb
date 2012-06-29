@@ -55,8 +55,15 @@ class OptionsStruct < OpenStruct
       opts.on("-o", "--output FILE", "Write diagram to file FILE") do |f|
         self.output = f
       end
+      opts.on("-O", "--origin ORIGIN", "origin of neighborhood") do |o|
+        self.origin = o
+      end
       opts.on("-r", "--root PATH", "Set PATH as the application root") do |r|
         self.root = r
+      end
+      opts.on("-s", "--step STEP", "output neighborhood is step STEP") do |s|
+        raise "--step n must be integer" unless s =~ /^[0-9]+$/
+        self.step = s.to_i
       end
       opts.on("-v", "--verbose", "Enable verbose output", 
               "  (produce messages to STDOUT)") do |v|

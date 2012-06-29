@@ -9,7 +9,7 @@ class AppDiagram
 
   def initialize(options)
     @options = options
-    @graph = DiagramGraph.new
+    @graph = DiagramGraph.new(@options.origin)
     @graph.show_label = @options.label
 
     STDERR.print "Loading application environment\n" if @options.verbose
@@ -36,7 +36,7 @@ class AppDiagram
     	STDOUT.print @graph.to_xmi
     else
         STDERR.print "Generating DOT graph\n" if @options.verbose
-        STDOUT.print @graph.to_dot 
+        STDOUT.print @graph.to_dot(@options.step)
     end
 
     if @options.output

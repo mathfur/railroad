@@ -8,11 +8,12 @@
 # RailRoad diagram structure
 class DiagramGraph
 
-  def initialize
+  def initialize(origin_name)
     @diagram_type = ''
     @show_label = false
     @nodes = []
     @edges = []
+    @origin_name = origin_name
   end
 
   def add_node(node)
@@ -33,10 +34,12 @@ class DiagramGraph
 
 
   # Generate DOT graph
-  def to_dot
+  def to_dot(n=0)
+    neighborhood_nodes, neighborhood_edges = delete_far_node_from(@nodes, @edges, @origin_name, n)
+
     return dot_header +
-           @nodes.map{|n| dot_node n[0], n[1], n[2]}.join +
-           @edges.map{|e| dot_edge e[0], e[1], e[2], e[3]}.join +
+           (@nodes - neighborhood_nodes).map{|n| dot_node n[0], n[1], n[2]}.join +
+           (@edges - neighborhood_edges).map{|e| dot_edge e[0], e[1], e[2], e[3]}.join +
            dot_footer
   end
 
@@ -129,5 +132,37 @@ class DiagramGraph
   def quote(name)
     '"' + name.to_s + '"'
   end
-  
+
+  # originよりstepより離れているノードは削除する
+  def delete_far_node_from(nodes, edges, origin_name, step=3)
+    node_classes = []
+
+    wanna_delete_names = [origin_name]
+    (step || 0).times do |i|
+      nodes, edges, wanna_delete_names = delete_connected_nodes(nodes, edges, wanna_delete_names)
+    end
+    return [nodes, edges]
+  end
+
+  # nodesとそのedgeを削除し、つながるnodeの集合を返す
+  def delete_connected_nodes(nodes, edges, wanna_delete_names)
+    raise "nodes(=#{node.inspect}) is wrong." unless nodes.all?{|e| e.size == 3}
+    raise "edges(=#{edges.inspect}) is wrong." unless edges.all?{|e| e.size == 4}
+    raise "wanna_delete_names(=#{edges.inspect}) is wrong." unless wanna_delete_names.all?{|e| e.kind_of?(String)}
+
+    deleted_names = []
+
+    wanna_delete_names.each do |n|
+      connected_edges = edges.select{|_, c1, c2, __| c1 == n || c2 == n}
+
+      edges = edges - connected_edges
+      nodes = nodes.reject{|_, n2, __| n2 == n}
+
+      # TODO: 以下がちゃんとノードの配列に成っているか?
+      deleted_names += connected_edges.map{|_, c1, c2, __| [c1, c2]}.flatten
+    end
+
+    return [nodes, edges, deleted_names]
+  end
+
 end # class DiagramGraph
