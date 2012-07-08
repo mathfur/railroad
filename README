@@ -1,3 +1,10 @@
+大きなプロジェクトだとグラフがでかくなりすぎたので、
+--origin User --step 3などのコマンドラインオプションで、
+特定のモデル周辺のみ表示できるようにした。
+
+dotファイル生成後は"neato -Tpng foo.dot > foo.png"のように画像ファイルにする。
+
+-------------------
 = RailRoad 
 
 RailRoad generates models and controllers diagrams in DOT language for a 
