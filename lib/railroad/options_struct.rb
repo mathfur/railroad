@@ -38,7 +38,7 @@ class OptionsStruct < OpenStruct
       opts.banner = "Usage: #{APP_NAME} [options] command"
       opts.separator ""
       opts.separator "Common options:"
-      opts.on("-b", "--brief", "Generate compact diagram", 
+      opts.on("-b", "--brief", "Generate compact diagram",
               "  (no attributes nor methods)") do |b|
         self.brief = b
       end
@@ -48,7 +48,7 @@ class OptionsStruct < OpenStruct
       opts.on("-i", "--inheritance", "Include inheritance relations") do |i|
         self.inheritance = i
       end
-      opts.on("-l", "--label", "Add a label with diagram information", 
+      opts.on("-l", "--label", "Add a label with diagram information",
               "  (type, date, migration, version)") do |l|
         self.label = l
       end
@@ -65,17 +65,22 @@ class OptionsStruct < OpenStruct
         raise "--step n must be integer" unless s =~ /^[0-9]+$/
         self.step = s.to_i
       end
-      opts.on("-v", "--verbose", "Enable verbose output", 
+      opts.on("-S", "--size 000x000", "set output size to 000x000") do |s|
+        raise "--size str must like /^[0-9\.]+x[0-9\.]+$/" unless s =~ /^([0-9\.]+)x([0-9\.]+)$/
+        self.x = $1.to_f
+        self.y = $2.to_f
+      end
+      opts.on("-v", "--verbose", "Enable verbose output",
               "  (produce messages to STDOUT)") do |v|
         self.verbose = v
       end
-      opts.on("-x", "--xmi", "Produce XMI instead of DOT", 
+      opts.on("-x", "--xmi", "Produce XMI instead of DOT",
               "  (for UML tools)") do |x|
         self.xmi = x
       end
       opts.separator ""
       opts.separator "Models diagram options:"
-      opts.on("-a", "--all", "Include all models", 
+      opts.on("-a", "--all", "Include all models",
               "  (not only ActiveRecord::Base derived)") do |a|
         self.all = a
       end
@@ -127,16 +132,16 @@ class OptionsStruct < OpenStruct
         if self.command != ''
           STDERR.print "Error: Can only generate one diagram type\n\n"
           exit 1
-        else 
-          self.command = 'models'        
+        else
+          self.command = 'models'
         end
-      end 
+      end
       opts.on("-C", "--controllers", "Generate controllers diagram") do |c|
         if self.command != ''
           STDERR.print "Error: Can only generate one diagram type\n\n"
           exit 1
-        else 
-          self.command = 'controllers'        
+        else
+          self.command = 'controllers'
         end
       end
       # From Ana Nelson's patch
@@ -144,10 +149,10 @@ class OptionsStruct < OpenStruct
         if self.command == 'controllers'
           STDERR.print "Error: Can only generate one diagram type\n\n"
           exit 1
-        else    
+        else
           self.command = 'aasm'
         end
-      end        
+      end
       opts.separator ""
       opts.separator "For bug reporting and additional information, please see:"
       opts.separator "http://railroad.rubyforge.org/"
@@ -166,7 +171,7 @@ class OptionsStruct < OpenStruct
     end
   end  # parse
 
-  private 
+  private
 
   def option_error(msg)
     STDERR.print "Error: #{msg}\n\n #{@opt_parser}\n"

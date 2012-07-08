@@ -8,12 +8,13 @@
 # RailRoad diagram structure
 class DiagramGraph
 
-  def initialize(origin_name)
+  def initialize(origin_name, opts={})
     @diagram_type = ''
     @show_label = false
     @nodes = []
     @edges = []
     @origin_name = origin_name
+    @size = opts[:size] && {:x => opts[:size][0], :y => opts[:size][1]}
   end
 
   def add_node(node)
@@ -53,8 +54,10 @@ class DiagramGraph
 
   # Build DOT diagram header
   def dot_header
+    graph_options = {:overlap => false, :splines => true}
+    graph_options = graph_options.merge({:size => %Q|"#{@size[:x]},#{@size[:y]}"|}) if @size
     result = "digraph #{@diagram_type.downcase}_diagram {\n" +
-             "\tgraph[overlap=false, splines=true]\n"
+             "\tgraph[#{graph_options.map{|k,v| "#{k}=#{v}"}.join(' ')}]\n"
     result += dot_label if @show_label
     return result
   end

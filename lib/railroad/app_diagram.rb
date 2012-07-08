@@ -9,7 +9,9 @@ class AppDiagram
 
   def initialize(options)
     @options = options
-    @graph = DiagramGraph.new(@options.origin)
+    diagram_graph_options = {}
+    diagram_graph_options[:size] = [@options.x, @options.y] if @options.x and @options.y
+    @graph = DiagramGraph.new(@options.origin, diagram_graph_options)
     @graph.show_label = @options.label
 
     STDERR.print "Loading application environment\n" if @options.verbose
