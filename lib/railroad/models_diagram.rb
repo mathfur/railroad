@@ -141,6 +141,9 @@ class ModelsDiagram < AppDiagram
     # Skip "belongs_to" associations
     return if assoc.macro.to_s == 'belongs_to'
 
+    # Skip through relation if only_simple_edge options
+    return if @options.only_simple_edge and assoc.class.to_s =~ /ThroughReflection$/
+
     # Only non standard association names needs a label
 
     # from patch #12384
@@ -157,6 +160,7 @@ class ModelsDiagram < AppDiagram
     elsif assoc.macro.to_s == 'has_many' && (! assoc.options[:through])
       assoc_type = 'one-many'
     else # habtm or has_many, :through
+      return if @options.only_simple_edge
       return if @habtm.include? [assoc.class_name, class_name, assoc_name]
       assoc_type = 'many-many'
       @habtm << [class_name, assoc.class_name, assoc_name]

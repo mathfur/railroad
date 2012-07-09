@@ -48,6 +48,9 @@ class OptionsStruct < OpenStruct
       opts.on("-i", "--inheritance", "Include inheritance relations") do |i|
         self.inheritance = i
       end
+      opts.on("-I", "--only_simple_edge", "Ignore many-many relations and through relation") do
+        self.only_simple_edge = true
+      end
       opts.on("-l", "--label", "Add a label with diagram information",
               "  (type, date, migration, version)") do |l|
         self.label = l
