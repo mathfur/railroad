@@ -35,8 +35,8 @@ class DiagramGraph
 
 
   # Generate DOT graph
-  def to_dot(n=0)
-    neighborhood_nodes, neighborhood_edges = delete_far_node_from(@nodes, @edges, @origin_name, n)
+  def to_dot(step=nil)
+    neighborhood_nodes, neighborhood_edges = delete_far_node_from(@nodes, @edges, @origin_name, step)
 
     return dot_header +
            (@nodes - neighborhood_nodes).map{|n| dot_node n[0], n[1], n[2], n[3]}.join +
@@ -140,7 +140,9 @@ class DiagramGraph
   end
 
   # originよりstepより離れているノードは削除する
-  def delete_far_node_from(nodes, edges, origin_name, step=3)
+  def delete_far_node_from(nodes, edges, origin_name, step=nil)
+    return [[], []] unless step
+
     node_classes = []
 
     wanna_delete_names = [origin_name]
