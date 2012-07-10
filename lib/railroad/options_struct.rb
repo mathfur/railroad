@@ -45,6 +45,9 @@ class OptionsStruct < OpenStruct
       opts.on("-e", "--exclude file1[,fileN]", Array, "Exclude given files") do |list|
         self.exclude = list
       end
+      opts.on("-f", "--fontsize SIZE", "Set fontsize to nodes") do |size|
+        self.fontsize = size
+      end
       opts.on("-i", "--inheritance", "Include inheritance relations") do |i|
         self.inheritance = i
       end

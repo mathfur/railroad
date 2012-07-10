@@ -39,7 +39,7 @@ class DiagramGraph
     neighborhood_nodes, neighborhood_edges = delete_far_node_from(@nodes, @edges, @origin_name, n)
 
     return dot_header +
-           (@nodes - neighborhood_nodes).map{|n| dot_node n[0], n[1], n[2]}.join +
+           (@nodes - neighborhood_nodes).map{|n| dot_node n[0], n[1], n[2], n[3]}.join +
            (@edges - neighborhood_edges).map{|e| dot_edge e[0], e[1], e[2], e[3]}.join +
            dot_footer
   end
@@ -79,7 +79,7 @@ class DiagramGraph
   end
 
   # Build a DOT graph node
-  def dot_node(type, name, attributes=nil)
+  def dot_node(type, name, attributes=nil, node_options={})
     case type
       when 'model'
            options = 'shape=Mrecord, label="{' + name + '|'
@@ -107,6 +107,9 @@ class DiagramGraph
            # Return subgraph format
            return "subgraph cluster_#{name.downcase} {\n\tlabel = #{quote(name)}\n\t#{attributes.join("\n  ")}}"
     end # case
+
+    options += ', ' + node_options.map{|k, v| "#{k}=#{v}"}.join(', ') unless node_options == {}
+
     return "\t#{quote(name)} [#{options}]\n"
   end # dot_node
 

@@ -101,7 +101,9 @@ class ModelsDiagram < AppDiagram
           node_attribs << content_column
         end
       end
-      @graph.add_node [node_type, current_class.name, node_attribs]
+      node_options = {}
+      node_options = node_options.merge(:fontsize => @options.fontsize) if @options.fontsize
+      @graph.add_node [node_type, current_class.name, node_attribs, node_options]
       generated = true
       # Process class associations
       associations = current_class.reflect_on_all_associations
